@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arjun Prasad's Tablet Description</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        #main-page {
+            margin: 50px auto;
+            width: 80%;
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+
+        h2 {
+            color: #4CAF50;
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        table {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td input {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin-right: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        button:focus {
+            outline: none;
+        }
+
+        /* Bottom message styling */
+        .prescription-message {
+            font-size: 18px;
+            color: red;
+            margin-top: 40px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Hide buttons when printing */
+        @media print {
+            #add-row, #remove-row, #print-button, #share-button {
+                display: none;
+            }
+            #main-page {
+                box-shadow: none;
+                border-radius: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Main Page with Excel-like Table -->
+    <div id="main-page">
+        <h2>Arjun Prasad's Tablet Description</h2>
+        <p>
+            Name: <input type="text" id="name-input" placeholder="Enter your name" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+            Phone: <input type="text" id="phone-input" placeholder="Enter phone number" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc;">
+            Date: <span id="current-date"></span>
+        </p>
+        <table id="tablet-table">
+            <thead>
+                <tr>
+                    <th>Tablet Name</th>
+                    <th>Description/Used For</th>
+                    <th>Timings for the Tablets</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Initial row -->
+                <tr>
+                    <td><input type="text" placeholder="Enter tablet name" oninput="updateDescription(this)"></td>
+                    <td><input type="text" placeholder="Enter description"></td>
+                    <td><input type="text" placeholder="Enter timings"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button id="add-row" onclick="addRow()">Add Row</button>
+        <button id="remove-row" onclick="removeRow()">Remove Row</button>
+        <button id="print-button" onclick="printPage()">Print</button>
+        <button id="share-button" onclick="shareToWhatsApp()">Share on WhatsApp</button>
+
+        <!-- Message at the bottom -->
+        <div class="prescription-message">
+            Use Only With The Doctor Prescription
+        </div>
+        <!-- Add this block just before the closing div for #main-page -->
+        <div style="margin-top: 30px; text-align: left;">
+            <label for="signature">Enter Signature:</label>
+            <input type="text" id="signature" placeholder="Enter your signature" style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; width: 100%; max-width: 400px;">
+        </div>
+
+    </div>
+
+    <script>
+        // Predefined tablets and their descriptions
+        const tabletDescriptions = {
+            "Paracetamol": "Used to reduce fever and relieve pain",
+            "Ibuprofen": "Used for treating pain, fever, and inflammation",
+            "Amoxicillin": "Used as an antibiotic for treating infections",
+            "Aspirin": "Used as a pain reliever and anti-inflammatory",
+            "Omeprazole": "Used to reduce stomach acid",
+            "Metformin": "Used to treat type 2 diabetes"
+        };
+
+        function addRow() {
+            const table = document.getElementById("tablet-table").getElementsByTagName("tbody")[0];
+            const newRow = table.insertRow();
+            
+            const cell1 = newRow.insertCell(0);
+            const cell2 = newRow.insertCell(1);
+            const cell3 = newRow.insertCell(2);
+
+            cell1.innerHTML = '<input type="text" placeholder="Enter tablet name" oninput="updateDescription(this)">';
+            cell2.innerHTML = '<input type="text" placeholder="Enter description">';
+            cell3.innerHTML = '<input type="text" placeholder="Enter timings">';
+        }
+
+        function removeRow() {
+            const table = document.getElementById("tablet-table").getElementsByTagName("tbody")[0];
+            const rowCount = table.rows.length;
+
+            if (rowCount > 1) {
+                table.deleteRow(rowCount - 1);
+            } else {
+                alert("At least one row must remain.");
+            }
+        }
+
+        // Update description based on tablet name
+        function updateDescription(inputElement) {
+            const tabletName = inputElement.value;
+            const row = inputElement.parentElement.parentElement; // Get the row containing the input field
+            const descriptionField = row.cells[1].getElementsByTagName("input")[0]; // Get the corresponding description field
+            
+            if (tabletDescriptions[tabletName]) {
+                descriptionField.value = tabletDescriptions[tabletName]; // Auto-fill description
+            } else {
+                descriptionField.value = ""; // Clear the description if no match
+            }
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        // Set live date on page load
+        function setCurrentDate() {
+            const dateElement = document.getElementById("current-date");
+            const currentDate = new Date().toLocaleDateString();
+            dateElement.innerText = currentDate;
+        }
+
+        // Share prescription details to WhatsApp
+        function shareToWhatsApp() {
+            const phoneNumber = document.getElementById("phone-input").value;
+            const userName = document.getElementById("name-input").value;
+            const currentDate = document.getElementById("current-date").innerText;
+            
+            if (!phoneNumber) {
+                alert("Please enter a phone number to share.");
+                return;
+            }
+
+            // Generate the message to be shared
+            let message = `Prescription Details for ${userName} on ${currentDate}:\n\n`;
+
+            const rows = document.querySelectorAll("#tablet-table tbody tr");
+            rows.forEach((row, index) => {
+                const tabletName = row.cells[0].getElementsByTagName("input")[0].value;
+                const description = row.cells[1].getElementsByTagName("input")[0].value;
+                const timings = row.cells[2].getElementsByTagName("input")[0].value;
+                
+                if (tabletName && description && timings) {
+                    message += `${index + 1}. Tablet: ${tabletName}\n   Description: ${description}\n   Timings: ${timings}\n\n`;
+                }
+            });
+
+            const whatsappUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
+
+            // Open the WhatsApp share URL in a new tab
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Initialize the current date on page load
+        window.onload = function() {
+            setCurrentDate();
+        };
+    </script>
+</body>
+</html>
