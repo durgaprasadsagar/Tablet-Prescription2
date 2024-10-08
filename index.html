@@ -120,7 +120,7 @@
             <tbody>
                 <!-- Initial row -->
                 <tr>
-                    <td><input type="text" placeholder="Enter tablet name" oninput="updateDescription(this)"></td>
+                    <td><input type="text" list="tablet-options" placeholder="Enter tablet name" oninput="updateDescription(this)"></td>
                     <td><input type="text" placeholder="Enter description"></td>
                     <td><input type="text" placeholder="Enter timings"></td>
                 </tr>
@@ -135,6 +135,7 @@
         <div class="prescription-message">
             Use Only With The Doctor Prescription
         </div>
+
         <!-- Add this block just before the closing div for #main-page -->
         <div style="margin-top: 30px; text-align: left;">
             <label for="signature">Enter Signature:</label>
@@ -142,6 +143,16 @@
         </div>
 
     </div>
+
+    <!-- Datalist for tablet suggestions -->
+    <datalist id="tablet-options">
+        <option value="Paracetamol">
+        <option value="Ibuprofen">
+        <option value="Amoxicillin">
+        <option value="Aspirin">
+        <option value="Omeprazole">
+        <option value="Metformin">
+    </datalist>
 
     <script>
         // Predefined tablets and their descriptions
@@ -162,9 +173,12 @@
             const cell2 = newRow.insertCell(1);
             const cell3 = newRow.insertCell(2);
 
-            cell1.innerHTML = '<input type="text" placeholder="Enter tablet name" oninput="updateDescription(this)">';
+            cell1.innerHTML = '<input type="text" list="tablet-options" placeholder="Enter tablet name" oninput="updateDescription(this)">';
             cell2.innerHTML = '<input type="text" placeholder="Enter description">';
             cell3.innerHTML = '<input type="text" placeholder="Enter timings">';
+
+            // Auto-focus the first input in the new row
+            newRow.cells[0].getElementsByTagName("input")[0].focus();
         }
 
         function removeRow() {
@@ -192,6 +206,13 @@
         }
 
         function printPage() {
+            const signature = document.getElementById("signature").value.trim();
+
+            if (!signature) {
+                alert("Please enter your signature before printing.");
+                return;
+            }
+            
             window.print();
         }
 
@@ -227,16 +248,13 @@
                 }
             });
 
-            const whatsappUrl = `https://web.whatsapp.com/send?phone=${phoneNumber}&text=${encodeURIComponent(message)}`;
-
-            // Open the WhatsApp share URL in a new tab
-            window.open(whatsappUrl, '_blank');
+            // WhatsApp API link format
+            const whatsappUrl = `https://wa.me/91${phoneNumber}?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, "_blank");
         }
 
-        // Initialize the current date on page load
-        window.onload = function() {
-            setCurrentDate();
-        };
+        // Call setCurrentDate on page load
+        window.onload = setCurrentDate;
     </script>
 </body>
 </html>
